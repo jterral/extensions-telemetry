@@ -1,0 +1,40 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+default_stages: [pre-commit]
+repos:
+  - repo: https://github.com/compilerla/conventional-pre-commit
+    rev: v3.6.0
+    hooks:
+      - id: conventional-pre-commit
+        name: check conventional commit
+        stages: [commit-msg]
+        args: [fix, feat, test, ci, chore]
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: mixed-line-ending
+      - id: check-merge-conflict
+      - id: check-yaml
+      - id: check-json
+      - id: end-of-file-fixer
+        exclude_types:
+          - "markdown"
+
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.21.2
+    hooks:
+      - id: gitleaks
+        name: detect hardcoded secrets
+
+  - repo: local
+    hooks:
+      - id: dotnet-build
+        name: dotnet build
+        stages: [pre-push]
+        entry: dotnet
+        args: ["build"]
+        language: system
+        types: ["sln"]
+        always_run: true

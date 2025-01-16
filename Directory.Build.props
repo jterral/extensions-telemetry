@@ -1,0 +1,6 @@
+<Project>
+    <PropertyGroup>
+        <AssemblyName>Jootl.Extensions.$(MSBuildProjectName.Replace(" ", "_"))</AssemblyName>
+        <RootNamespace>$(AssemblyName)</RootNamespace>
+    </PropertyGroup>
+</Project>
