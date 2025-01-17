@@ -34,6 +34,6 @@ jobs:
           dotnet-version: ${{ env.DOTNET_VERSION }}
           source-url: https://nuget.pkg.github.com/jterral/index.json
         env:
-          NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NUGET_AUTH_TOKEN: ${{ secrets.NUGET_AUTH_TOKEN }}
       - run: dotnet pack --configuration Release --output nupkgs
-      - run: dotnet nuget push nupkgs/*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }}
+      - run: dotnet nuget push nupkgs/*.nupkg --api-key ${{ secrets.NUGET_AUTH_TOKEN }}
