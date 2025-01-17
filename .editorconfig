@@ -8,3 +8,7 @@ indent_style = space
 
 [*.cs]
 indent_size = 4
+
+[{Makefile,*.mk}]
+indent_style = tab
+indent_size = 4

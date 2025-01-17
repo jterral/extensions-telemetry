@@ -26,7 +26,7 @@ jobs:
   pack:
     needs: build
     runs-on: ubuntu-latest
-    # if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-dotnet@v4
@@ -36,4 +36,4 @@ jobs:
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.NUGET_AUTH_TOKEN }}
       - run: dotnet pack --configuration Release --output nupkgs
-      - run: dotnet nuget push nupkgs/*.nupkg --api-key ${{ secrets.NUGET_AUTH_TOKEN }}
+      - run: dotnet nuget push nupkgs/*.nupkg --api-key ${{ secrets.NUGET_AUTH_TOKEN }} --skip-duplicate
