@@ -14,7 +14,7 @@ public static class DependencyInjection
         builder.UseSerilog((context, loggerConfig) =>
         {
             loggerConfig.AddCustomLogLevels(context.Configuration);
-            loggerConfig.AddCustomEnriches(context.Configuration);
+            loggerConfig.AddCustomEnrichments(context.Configuration);
             loggerConfig.AddCustomSinks(context.Configuration);
         });
 
@@ -23,7 +23,8 @@ public static class DependencyInjection
 
     public static IApplicationBuilder UseCustomLogging(this IApplicationBuilder app)
     {
-        app.UseSerilogRequestLogging();
+        app.UseSerilogRequestLogging(options =>
+            options.EnrichDiagnosticContext = LoggingConfiguration.AddHttpRequestEnrichments);
 
         return app;
     }

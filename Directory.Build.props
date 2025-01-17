@@ -2,5 +2,6 @@
     <PropertyGroup>
         <AssemblyName>Jootl.Extensions.$(MSBuildProjectName.Replace(" ", "_"))</AssemblyName>
         <RootNamespace>$(AssemblyName)</RootNamespace>
+        <Version>1.0.0</Version>
     </PropertyGroup>
 </Project>

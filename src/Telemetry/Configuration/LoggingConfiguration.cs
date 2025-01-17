@@ -1,4 +1,6 @@
+using System.Reflection;
 using Jootl.Extensions.Telemetry.Extensions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Serilog;
 using Serilog.Events;
@@ -9,14 +11,29 @@ internal static class LoggingConfiguration
 {
     private const string KeyPrefix = "Logging:Jootl";
 
-    internal static void AddCustomEnriches(this LoggerConfiguration loggerConfig, IConfiguration configuration)
+    internal static void AddCustomEnrichments(this LoggerConfiguration loggerConfig, IConfiguration configuration)
     {
-        var applicationName = configuration.GetValue($"{KeyPrefix}:Application", "Jootl");
-        var logVersion = typeof(DependencyInjection).Assembly.GetName().Version?.ToString() ?? "0.0.0";
+        var appName = configuration.GetValue($"{KeyPrefix}:ApplicationName", "Jootl");
+        var appVersion = Assembly.GetEntryAssembly()?.GetName().Version?.ToString() ?? "0.0.0-unknown";
 
         loggerConfig.Enrich.FromLogContext()
-            .Enrich.WithProperty("Application", applicationName)
-            .Enrich.WithProperty("LogVersion", logVersion);
+            .Enrich.WithProperty("ApplicationName", appName)
+            .Enrich.WithProperty("ApplicationVersion", appVersion);
+    }
+
+    internal static void AddHttpRequestEnrichments(IDiagnosticContext diagnosticContext, HttpContext httpContext)
+    {
+        var remoteIpAddress = httpContext.Connection.RemoteIpAddress?.ToString();
+        if (!string.IsNullOrWhiteSpace(remoteIpAddress))
+            diagnosticContext.Set("ClientIP", remoteIpAddress);
+
+        var userAgent = httpContext.Request.Headers.UserAgent.ToString();
+        if (!string.IsNullOrWhiteSpace(userAgent))
+            diagnosticContext.Set("UserAgent", userAgent);
+
+        var correlationId = httpContext.Request.Headers["X-Correlation-ID"].ToString();
+        if (!string.IsNullOrWhiteSpace(correlationId))
+            diagnosticContext.Set("CorrelationId", correlationId);
     }
 
     internal static void AddCustomLogLevels(this LoggerConfiguration loggerConfig, IConfiguration configuration)
@@ -48,21 +65,23 @@ internal static class LoggingConfiguration
         loggerConfig.WriteTo.Console();
 
         // Try to add Seq sink
-        var seqUrl = configuration.GetValue($"{KeyPrefix}:Seq:Url", string.Empty);
+        var seqUrl = configuration.GetValue<string?>($"{KeyPrefix}:Seq:ApiUrl", null);
         if (string.IsNullOrWhiteSpace(seqUrl))
         {
-            Log.Information("Seq is not configured. Seq logging will not be enabled.");
-            // Console.WriteLine("Seq URL is not configured. Seq logging will not be enabled.");
+            Console.WriteLine("Seq URL is not configured. Seq logging will not be enabled.");
             return;
         }
 
         if (!Uri.TryCreate(seqUrl, UriKind.Absolute, out _))
         {
-            Log.Warning("Seq address '{SeqUrl}' is not a valid URL.", seqUrl);
-            // Console.WriteLine("Seq URL is not a valid URL.");
+            Console.WriteLine("Seq URL is not a valid URL.");
             return;
         }
 
-        loggerConfig.WriteTo.Seq(seqUrl);
+        // Try to add Seq ApiKey (optional)
+        var seqApiKey = configuration.GetValue<string?>($"{KeyPrefix}:Seq:ApiKey", null);
+        if (string.IsNullOrWhiteSpace(seqApiKey)) Console.WriteLine("Seq is configured without ApiKey.");
+
+        loggerConfig.WriteTo.Seq(seqUrl, apiKey: seqApiKey);
     }
 }
