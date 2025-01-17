@@ -31,4 +31,4 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
       - run: dotnet pack --configuration Release --output nupkgs
-      - run: dotnet push nupkgs/*.nupkg --source https://nuget.pkg.github.com/jterral/index.json --api-key ${{ secrets.NUGET_AUTH_TOKEN }}
+      - run: dotnet nuget push nupkgs/*.nupkg --source https://nuget.pkg.github.com/jterral/index.json --api-key ${{ secrets.GITHUB_TOKEN }}
