@@ -6,6 +6,8 @@
         <Authors>Jonathan Trl</Authors>
         <Company>Jootl</Company>
         <Description>Extensions for Telemetry.</Description>
+        <RepositoryUrl>https://github.com/jterral/extensions-telemetry</RepositoryUrl>
+        <PackageProjectUrl>https://github.com/jterral/extensions-telemetry</PackageProjectUrl>
         <Version>1.0.0</Version>
     </PropertyGroup>
 </Project>
