@@ -2,7 +2,7 @@
 
 ## 📝 Overview
 
-This NuGet package provides telemetry capabilities for your applications. It allows you to collect, analyze, and visualize telemetry data to gain insights into the performance and usage of your software.
+This NuGet package provides telemetry capabilities for your applications by configuring Serilog with defined parameters.
 
 ## 📦 Installation
 
@@ -16,23 +16,7 @@ Install-Package Jootl.Extensions.Telemetry
 
 After installing the package, you can start using it by adding the necessary using directive and initializing the telemetry service in your application.
 
-```csharp
-using Jootl.Extensions.Telemetry;
-
-// ...
-// var builder = WebApplication.CreateBuilder(args);
-// ...
-
-// Add custom logging to the Host
-builder.Host.AddCustomLogging();
-
-// ...
-// var app = builder.Build();
-// ...
-
-// Use custom logging capabilities
-app.UseCustomLogging();
-```
+### Configuration
 
 Add section `Jootl` under `Logging` in `appsettings.json`.
 
@@ -53,6 +37,40 @@ Add section `Jootl` under `Logging` in `appsettings.json`.
   },
 }
 ```
+
+### For Web/Api
+
+```csharp
+using Jootl.Extensions.Telemetry;
+
+// ...
+var builder = WebApplication.CreateBuilder(args);
+// ...
+
+// Add custom logging to the Host
+builder.Host.AddCustomLogging();
+
+// ...
+var app = builder.Build();
+// ...
+
+// Use custom logging capabilities
+app.UseCustomLogging();
+```
+
+### For Worker
+
+```csharp
+using Jootl.Extensions.Telemetry;
+
+// ...
+var builder = Host.CreateApplicationBuilder(args);
+// ...
+
+// Add custom logging to the services
+builder.Services.AddCustomLogging(builder.Configuration);
+```
+
 
 ## ✨ Features
 

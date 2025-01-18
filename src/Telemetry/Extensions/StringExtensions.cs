@@ -2,9 +2,9 @@ using Serilog.Events;
 
 namespace Jootl.Extensions.Telemetry.Extensions;
 
-public static class StringExtensions
+internal static class StringExtensions
 {
-    public static LogEventLevel ToLogEventLevel(this string value)
+    internal static LogEventLevel ToLogEventLevel(this string value)
     {
         return value.ToLowerInvariant() switch
         {
