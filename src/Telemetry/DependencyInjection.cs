@@ -31,6 +31,20 @@ public static class DependencyInjection
     }
 
     /// <summary>
+    ///     Adds custom logging configuration to the host application builder.
+    /// </summary>
+    /// <param name="builder">The host application builder.</param>
+    /// <returns>
+    ///     The host application builder with custom logging configuration.
+    /// </returns>
+    public static IHostApplicationBuilder AddCustomLogging(this IHostApplicationBuilder builder)
+    {
+        builder.Services.AddCustomLogging(builder.Configuration);
+
+        return builder;
+    }
+
+    /// <summary>
     ///     Adds custom logging configuration to the service collection.
     /// </summary>
     /// <param name="services">The service collection.</param>

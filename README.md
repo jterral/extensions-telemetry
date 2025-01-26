@@ -34,7 +34,7 @@ Add section `Jootl` under `Logging` in `appsettings.json`.
         "ApiKey": "__MY_API_KEY__"
       }
     }
-  },
+  }
 }
 ```
 
